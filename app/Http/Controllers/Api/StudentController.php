@@ -25,14 +25,9 @@ class StudentController extends Controller
         try {
             $user = Auth::user();
 
-            // Ambil data siswa
-            $students = $user->hasRole('administration')
-                ? Student::with('class')->get()
-                : Student::with('class')->where('class_id', $user->class_id)->get();
-
             // Jika bukan admin, pastikan class valid
             $class = $user->class_id ? ClassRoom::find($user->class_id) : null;
-            if ($user->hasRole('teacher') && !$class) {
+            if ($user->hasRole('homeroom_teacher') && !$class) {
                 return ApiResponse::error('Kelas tidak ditemukan.', 404);
             }
         } catch (\Exception $e) {
@@ -209,7 +204,7 @@ class StudentController extends Controller
     public function destroy(Student $student)
     {
         // Validasi: Cek apakah siswa memiliki data nilai
-        if ($student->nilai()->exists()) {
+        if ($student->scores()->exists()) {
             return ApiResponse::error('Siswa tidak bisa dihapus karena masih memiliki data nilai.', 400);
         }
 

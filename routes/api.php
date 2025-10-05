@@ -11,9 +11,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 // Route Login
-Route::post('/register', [AuthController::class, 'register']);
-
-// Route Register
 Route::post('/login', [AuthController::class, 'login']);
 
 // Route with Sanctum Authentication
